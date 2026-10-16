@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f5f0">
+  <title>家庭庫存管理</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar"><div><div class="eyebrow">HOME INVENTORY</div><h1>家庭庫存管理</h1></div><button id="loginOpen" class="button secondary">管理者登入</button></header>
+  <main class="container">
+    <section class="intro"><p class="eyebrow">PUBLIC VIEW</p><h2>效期提醒</h2><p>此頁面只顯示已過期或即將到期的物品，不公開完整庫存、數量、存放位置或異動紀錄。</p></section>
+    <section class="filters"><button class="chip active" data-filter="all">全部提醒</button><button class="chip" data-filter="已過期">已過期</button><button class="chip" data-filter="即將到期">即將到期</button><button id="refresh" class="button secondary small">重新整理</button></section>
+    <div id="status" class="notice">請先設定 Supabase 連線資訊，再載入效期清單。</div>
+    <section id="expiryList" class="item-list" aria-live="polite"></section>
+    <section id="adminPanel" class="admin-panel hidden">
+      <div class="section-heading"><div><p class="eyebrow">ADMIN</p><h2>管理者工作區</h2></div><button id="logout" class="button secondary">登出</button></div>
+      <div class="tabs"><button class="tab active" data-tab="items">物品</button><button class="tab" data-tab="receive">新增入庫</button><button class="tab" data-tab="transactions">異動紀錄</button></div>
+      <section id="tab-items" class="tab-content">
+        <h3>新增物品</h3>
+        <form id="itemForm" class="form-grid">
+          <label>物品名稱<input name="name" required maxlength="120" placeholder="例如：高山烏龍茶"></label>
+          <label>品牌（選填）<input name="brand" maxlength="120" placeholder="品牌"></label>
+          <label>分類<select name="category_id" id="categorySelect"><option value="">未分類</option></select></label>
+          <label>計量單位<input name="unit" required value="包" maxlength="20"></label>
+          <label>存放位置<select name="location_id" id="locationSelect"><option value="">未指定</option></select></label>
+          <label>低庫存門檻（選填）<input name="low_stock_threshold" type="number" min="0" step="0.001"></label>
+          <label>效期提醒天數<input name="expiry_reminder_days" type="number" min="0" value="30" required></label>
+          <label>備註<input name="notes" maxlength="500"></label>
+          <button class="button primary" type="submit">建立物品</button>
+        </form>
+        <h3>現有物品</h3><div id="itemsTable" class="table-wrap"></div>
+      </section>
+      <section id="tab-receive" class="tab-content hidden">
+        <h3>新增入庫批次</h3>
+        <form id="receiveForm" class="form-grid">
+          <label>物品<select name="item_id" id="receiveItem" required></select></label>
+          <label>入庫數量<input name="quantity" type="number" min="0.001" step="0.001" required></label>
+          <label>入庫日期<input name="received_date" type="date" required></label>
+          <label>有效期限（包裝未標示可留空）<input name="expiry_date" type="date"></label>
+          <label>批次備註<input name="batch_label" maxlength="120" placeholder="例如：2026 年 10 月購買"></label>
+          <label>開封日期（選填）<input name="opened_date" type="date"></label>
+          <label>開封後使用期限（選填）<input name="opened_use_by_date" type="date"></label>
+          <label>備註<input name="notes" maxlength="500"></label>
+          <button class="button primary" type="submit">確認入庫</button>
+        </form>
+      </section>
+      <section id="tab-transactions" class="tab-content hidden"><h3>最近異動紀錄</h3><div id="transactionsTable" class="table-wrap"></div></section>
+      <div id="adminStatus" class="notice hidden" aria-live="polite"></div>
+    </section>
+  </main>
+  <dialog id="loginDialog"><form id="loginForm" class="login-form"><button type="button" id="loginClose" class="dialog-close" aria-label="關閉">×</button><p class="eyebrow">ADMIN ACCESS</p><h2>管理者登入</h2><label>電子郵件<input type="email" name="email" required autocomplete="username"></label><label>密碼<input type="password" name="password" required autocomplete="current-password"></label><button class="button primary" type="submit">登入</button><p id="loginMessage" class="form-message"></p></form></dialog>
+  <footer>家庭庫存管理 · 公開頁面僅顯示效期提醒</footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
+</body></html>
