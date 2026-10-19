@@ -39,12 +39,12 @@
           <label>物品名稱<input name="name" required maxlength="120" placeholder="例如：高山烏龍茶"></label>
           <label>品牌（選填）<input name="brand" maxlength="120" placeholder="品牌"></label>
           <label>分類<div class="select-with-action"><select name="category_id" id="categorySelect"><option value="">未分類</option></select><button class="button secondary small" type="button" id="addCategory">＋新增</button></div></label>
-          <label>計量單位<input name="unit" required value="包" maxlength="20"></label>
-          <label>預設單價（元／單位）<input name="unit_cost" type="number" min="0" step="0.01" placeholder="例如：120"></label>
           <label>存放位置<div class="select-with-action"><select name="location_id" id="locationSelect"><option value="">未指定</option></select><button class="button secondary small" type="button" id="addLocation">＋新增</button></div></label>
-          <label>低庫存門檻（選填）<input name="low_stock_threshold" type="number" min="0" step="0.001"></label>
+          <label>購買單價（元／單位）<input name="unit_cost" type="number" min="0" step="0.01" placeholder="例如：120"></label>
+          <label>計量單位<input name="unit" required value="包" maxlength="20"></label>
+          <label>低庫存門檻<input name="low_stock_threshold" type="number" min="0" step="0.001"></label>
           <label>效期提醒天數<input name="expiry_reminder_days" type="number" min="0" value="30" required></label>
-          <label>備註<input name="notes" maxlength="500"></label>
+          <label class="full-width">備註<input name="notes" maxlength="500"></label>
           <button class="button primary" type="submit">建立物品</button>
         </form>
         <h3>現有物品</h3><div id="itemsTable" class="table-wrap"></div>
