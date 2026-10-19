@@ -32,12 +32,12 @@ async function refreshPublic(){
  const rows=JSON.parse($('#expiryList').dataset.rows||'[]');
  if(db) await loadPublicExpiry(); else renderExpiry(rows);
 }
-function setSignedInUI(signedIn,email=''){ $('#adminPanel').classList.toggle('hidden',!signedIn); $('#loginOpen').classList.toggle('hidden',signedIn); $('#logout').classList.toggle('hidden',!signedIn); $('#signedInEmail').classList.toggle('hidden',!signedIn); $('#signedInEmail').textContent=signedIn?email:''; }
+function setSignedInUI(signedIn,email=''){ $('#adminPanel').classList.toggle('hidden',!signedIn); $('#loginOpen').classList.toggle('hidden',signedIn); $('#logout').classList.toggle('hidden',!signedIn); $('#signedInEmail').classList.toggle('hidden',!signedIn); $('#signedInEmail').textContent=signedIn?email:''; if(signedIn){ const dialog=$('#loginDialog'); if(dialog?.open) dialog.close(); $('#loginForm')?.reset(); } }
 async function verifyAdmin(session){
  if(!session){setSignedInUI(false);return false;}
  const {data,error}=await db.from('profiles').select('is_admin').eq('user_id',session.user.id).maybeSingle();
  if(error||!data?.is_admin){await db.auth.signOut();setSignedInUI(false);$('#loginMessage').textContent='此帳號尚未被授權為管理者。';return false;}
- setSignedInUI(true,session.user.email||'已登入');$('#loginMessage').textContent='';await loadAdminData();return true;
+ setSignedInUI(true,session.user.email||'已登入');$('#loginMessage').textContent='';const loginDialog=$('#loginDialog');if(loginDialog?.open)loginDialog.close();$('#loginForm').reset();await loadAdminData();return true;
 }
 async function loadAdminData(){await Promise.all([loadCategories(),loadLocations(),loadItems(),loadTransactions()]);}
 async function loadCategories(){const {data,error}=await db.from('categories').select('id,name').eq('is_active',true).order('name');if(error)return setAdminNotice(error.message,true);$('#categorySelect').innerHTML='<option value="">未分類</option>'+(data||[]).map(x=>`<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('');}
