@@ -82,3 +82,7 @@ body{color:var(--ink);background:#fbf6ed}
 .sidebar-note{position:relative;padding-top:20px}.sidebar-note:before{content:'♡';display:block;font-size:30px;line-height:1;color:#d78365;margin-bottom:8px}.sidebar-note strong{color:#96724c}
 @media(max-width:760px){.home-hero{min-height:0;padding:22px;}.hero-art{flex-basis:34%;margin-right:-8px}.hero-art svg{max-height:140px}}
 @media(max-width:560px){.home-hero{display:block;padding:22px}.hero-art{height:110px;max-width:100%;margin:6px 0 -10px;justify-content:flex-end}.hero-art svg{width:75%;max-height:120px}.hero-caption{line-height:1.5}.page-main .intro h2{font-size:26px}}
+
+/* Inline create controls and batch details */
+.select-with-action{display:flex;align-items:center;gap:8px}.select-with-action select{flex:1;min-width:0}.select-with-action .button{white-space:nowrap;flex-shrink:0}.batch-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;padding:12px 14px;border:1px solid #dce5d4;border-radius:12px;background:#edf3e8}.batch-info div{display:flex;flex-direction:column;gap:4px;min-width:0}.batch-info span{font-size:12px;color:#668064}.batch-info strong{font-size:15px;color:#38583d;overflow-wrap:anywhere}.helper-text{display:block;color:#817866;font-size:12px;line-height:1.5;margin-top:6px}
+@media(max-width:560px){.select-with-action{align-items:stretch}.select-with-action .button{padding:9px 10px}.batch-info{gap:8px;padding:10px}}

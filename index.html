@@ -36,9 +36,9 @@
         <form id="itemForm" class="form-grid">
           <label>物品名稱<input name="name" required maxlength="120" placeholder="例如：高山烏龍茶"></label>
           <label>品牌（選填）<input name="brand" maxlength="120" placeholder="品牌"></label>
-          <label>分類<select name="category_id" id="categorySelect"><option value="">未分類</option></select></label>
+          <label>分類<div class="select-with-action"><select name="category_id" id="categorySelect"><option value="">未分類</option></select><button class="button secondary small" type="button" id="addCategory">＋新增</button></div></label>
           <label>計量單位<input name="unit" required value="包" maxlength="20"></label>
-          <label>存放位置<select name="location_id" id="locationSelect"><option value="">未指定</option></select></label>
+          <label>存放位置<div class="select-with-action"><select name="location_id" id="locationSelect"><option value="">未指定</option></select><button class="button secondary small" type="button" id="addLocation">＋新增</button></div></label>
           <label>低庫存門檻（選填）<input name="low_stock_threshold" type="number" min="0" step="0.001"></label>
           <label>效期提醒天數<input name="expiry_reminder_days" type="number" min="0" value="30" required></label>
           <label>備註<input name="notes" maxlength="500"></label>
@@ -65,7 +65,7 @@
         <p class="helper-text">請選擇實際出庫的庫存批次。若同一物品有不同效期，請依照批次及效期選擇，避免扣錯庫存。</p>
         <form id="consumeForm" class="form-grid">
           <label>物品<select name="item_id" id="consumeItem" required></select></label>
-          <label>庫存批次<select name="batch_id" id="consumeBatch" required></select></label>
+          <label>庫存批次<select name="batch_id" id="consumeBatch" required></select><small class="helper-text">選單顯示物品名稱與入庫日期；選取後會在下方顯示效期及剩餘數量。</small><div id="selectedBatchInfo" class="batch-info hidden" aria-live="polite"></div></label>
           <label>出庫數量<input name="quantity" type="number" min="0.001" step="0.001" required placeholder="輸入數量"></label>
           <label>出庫類型<select name="type" required><option value="consume">一般領用</option><option value="discard">丟棄／報廢</option></select></label>
           <label class="full-width">原因／備註<input name="reason" maxlength="500" placeholder="例如：日常使用、過期丟棄"></label>
