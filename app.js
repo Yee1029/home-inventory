@@ -12,6 +12,15 @@ const todayISO = () => new Date().toLocaleDateString('en-CA');
 function setNotice(message, error=false, target='#status') { const el=$(target); el.textContent=message; el.classList.toggle('error',error); el.classList.remove('hidden'); }
 function clearNotice(target='#status'){ $(target).classList.add('hidden'); }
 function setAdminNotice(message,error=false){setNotice(message,error,'#adminStatus');}
+function showPage(page){
+  if(page!=='expiry' && !db){page='expiry';}
+  if(page!=='expiry' && $('#loginOpen').classList.contains('hidden')===false){page='expiry';$('#loginForm').reset();$('#loginDialog').showModal();return;}
+  $('#page-expiry').classList.toggle('hidden',page!=='expiry');
+  $('#adminPanel').classList.toggle('hidden',page==='expiry');
+  document.querySelectorAll('[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===page));
+  const titles={items:'物品管理',receive:'新增入庫',consume:'領用出庫',transactions:'異動紀錄'};
+  if(page!=='expiry'){document.querySelectorAll('.tab-content').forEach(el=>el.classList.toggle('hidden',el.id!==`tab-${page}`));$('#adminPageTitle').textContent=titles[page]||'管理功能';}
+}
 function formatDate(date){ if(!date) return '未設定'; const d=new Date(`${date}T00:00:00`); return Number.isNaN(d.getTime())?date:d.toLocaleDateString('zh-TW'); }
 
 async function loadPublicExpiry(){
@@ -32,7 +41,7 @@ async function refreshPublic(){
  const rows=JSON.parse($('#expiryList').dataset.rows||'[]');
  if(db) await loadPublicExpiry(); else renderExpiry(rows);
 }
-function setSignedInUI(signedIn,email=''){ $('#adminPanel').classList.toggle('hidden',!signedIn); $('#loginOpen').classList.toggle('hidden',signedIn); $('#logout').classList.toggle('hidden',!signedIn); $('#signedInEmail').classList.toggle('hidden',!signedIn); $('#signedInEmail').textContent=signedIn?email:''; if(signedIn){ const dialog=$('#loginDialog'); if(dialog?.open) dialog.close(); $('#loginForm')?.reset(); } }
+function setSignedInUI(signedIn,email=''){ $('#loginOpen').classList.toggle('hidden',signedIn); $('#logout').classList.toggle('hidden',!signedIn); $('#signedInEmail').classList.toggle('hidden',!signedIn); $('#signedInEmail').textContent=signedIn?email:''; document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('hidden',!signedIn)); if(!signedIn) showPage('expiry'); if(signedIn){ const dialog=$('#loginDialog'); if(dialog?.open) dialog.close(); $('#loginForm')?.reset(); } }
 async function verifyAdmin(session){
  if(!session){setSignedInUI(false);return false;}
  const {data,error}=await db.from('profiles').select('is_admin').eq('user_id',session.user.id).maybeSingle();
@@ -49,7 +58,7 @@ async function loadItems(){
  $('#receiveItem').innerHTML='<option value="">請選擇物品</option>'+currentItems.filter(i=>i.is_active).map(i=>`<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('');
  $('#consumeItem').innerHTML='<option value="">請選擇物品</option>'+currentItems.filter(i=>i.is_active&&(i.inventory_batches||[]).some(b=>Number(b.remaining_quantity)>0)).map(i=>`<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('');
  updateConsumeBatches();
- $('#itemsTable').querySelectorAll('[data-consume]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x.dataset.tab==='consume'));document.querySelectorAll('.tab-content').forEach(x=>x.classList.add('hidden'));$('#tab-consume').classList.remove('hidden');$('#consumeItem').value=b.dataset.consume;updateConsumeBatches();}));
+ $('#itemsTable').querySelectorAll('[data-consume]').forEach(b=>b.addEventListener('click',()=>{showPage('consume');$('#consumeItem').value=b.dataset.consume;updateConsumeBatches();}));
  $('#itemsTable').querySelectorAll('[data-deactivate]').forEach(b=>b.addEventListener('click',()=>deactivateItem(b.dataset.deactivate)));
 }
 async function loadTransactions(){const {data,error}=await db.from('stock_transactions').select('created_at,transaction_type,quantity,quantity_delta,reason,items(name)').order('created_at',{ascending:false}).limit(100);if(error)return setAdminNotice(error.message,true);$('#transactionsTable').innerHTML=data?.length?`<table><thead><tr><th>時間</th><th>物品</th><th>類型</th><th>異動量</th><th>原因</th></tr></thead><tbody>${data.map(t=>`<tr><td>${new Date(t.created_at).toLocaleString('zh-TW')}</td><td>${escapeHtml(t.items?.name||'—')}</td><td>${escapeHtml(t.transaction_type)}</td><td>${Number(t.quantity_delta)>0?'+':''}${t.quantity_delta}</td><td>${escapeHtml(t.reason||'')}</td></tr>`).join('')}</tbody></table>`:'<p>尚無異動紀錄。</p>';}
@@ -57,7 +66,8 @@ async function deactivateItem(id){if(!confirm('確定停用這個物品？歷史
 
 $('#loginOpen').addEventListener('click',()=>{ $('#loginForm').reset(); $('#loginMessage').textContent=''; $('#loginDialog').showModal(); });$('#loginClose').addEventListener('click',()=>{ $('#loginForm').reset(); $('#loginDialog').close(); });$('#loginDialog').addEventListener('close',()=>$('#loginForm').reset());$('#refresh').addEventListener('click',refreshPublic);
 document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{currentFilter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderExpiry(JSON.parse($('#expiryList').dataset.rows||'[]'));}));
-document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.tab-content').forEach(x=>x.classList.add('hidden'));$('#tab-'+b.dataset.tab).classList.remove('hidden');}));
+document.querySelectorAll('[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+$('#tab-items').classList.remove('hidden');
 $('#loginForm').addEventListener('submit',async e=>{e.preventDefault();if(!db)return;const f=new FormData(e.currentTarget);$('#loginMessage').textContent='登入中…';const {data,error}=await db.auth.signInWithPassword({email:f.get('email'),password:f.get('password')});if(error){$('#loginMessage').textContent='登入失敗，請確認帳號、密碼與 Supabase Auth 設定。';return;}const ok=await verifyAdmin(data.session);if(ok){e.currentTarget.reset();$('#loginDialog').close();}});
 $('#logout').addEventListener('click',async()=>{await db.auth.signOut();$('#loginForm').reset();setSignedInUI(false);await loadPublicExpiry();});
 $('#itemForm').addEventListener('submit',async e=>{e.preventDefault();const f=new FormData(e.currentTarget);const payload={name:f.get('name').trim(),brand:f.get('brand')||null,category_id:f.get('category_id')||null,unit:f.get('unit').trim(),location_id:f.get('location_id')||null,low_stock_threshold:f.get('low_stock_threshold')||null,expiry_reminder_days:Number(f.get('expiry_reminder_days')),notes:f.get('notes')||null};const {data:{user}}=await db.auth.getUser();payload.created_by=user.id;const {error}=await db.from('items').insert(payload);if(error)return setAdminNotice(error.message,true);e.currentTarget.reset();e.currentTarget.elements.unit.value='包';e.currentTarget.elements.expiry_reminder_days.value='30';setAdminNotice('物品已建立。請到「新增入庫」建立第一筆庫存批次。');await loadItems();});

@@ -39,3 +39,27 @@ table{color:#494238}th,td{border-bottom-color:#eee5d9}th{color:#887b68}
 .dialog-close{color:#897866}dialog{background:#fffdf8}dialog::backdrop{background:#4b443b77}
 footer{color:#9a8b78;border-top-color:#e9dfd0}
 @media(max-width:640px){.admin-layout{grid-template-columns:1fr}.sidebar{position:static;background:#f7f0e4}.admin-content{padding:16px}.intro{background:linear-gradient(135deg,#e8eddf,#f6ead9)}}
+
+/* Family dashboard layout: independent persistent left navigation, one page at a time */
+.topbar{padding:16px 28px;min-height:74px}
+.app-shell{display:grid;grid-template-columns:264px minmax(0,1fr);min-height:calc(100vh - 74px);align-items:stretch}
+.app-sidebar{background:#f4ecdf;border-right:1px solid #e7dac7;padding:24px 16px;display:flex;flex-direction:column;min-height:calc(100vh - 74px);position:sticky;top:0;height:calc(100vh - 0px);align-self:start}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:0 8px 24px;border-bottom:1px solid #e4d6c2}
+.brand-icon{display:flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:13px;background:#d88766;color:#fffaf2;font-size:28px;font-weight:800}
+.sidebar-brand strong{display:block;color:#485542;font-size:16px}.sidebar-brand small{display:block;color:#a17c56;font-size:10px;letter-spacing:.1em;margin-top:3px}
+.sidebar-label{font-size:11px;color:#9b8b76;margin:24px 8px 10px;font-weight:700;letter-spacing:.08em}
+.sidebar-nav{display:flex;flex-direction:column;gap:6px}
+.nav-item{display:flex;align-items:center;gap:13px;width:100%;text-align:left;border:0;border-radius:12px;background:transparent;padding:13px 14px;color:#685b4b;font:inherit;cursor:pointer;transition:background .15s ease,color .15s ease}
+.nav-item span{display:inline-flex;width:22px;justify-content:center;color:#a8794b;font-size:19px;font-weight:700}
+.nav-item:hover{background:#eee3d2}.nav-item.active{background:#e1e8d6;color:#365b43;font-weight:700}.nav-item.active span{color:#477c59}
+.sidebar-note{margin-top:auto;padding:16px 10px 8px;color:#94734e;font-size:13px;line-height:1.7}.sidebar-note p{font-size:12px;color:#9a8c78;margin:6px 0 0}
+.page-main{min-width:0;padding:26px clamp(16px,3vw,44px) 56px;background:linear-gradient(180deg,#fbf8f1,#f7f1e7)}
+.page-main .container{max-width:none;margin:0;padding:0}
+.page-view{max-width:1250px;margin:0 auto}.page-view .intro{padding:28px 30px}.page-view .filters{margin:20px 0}.page-view .item-list{grid-template-columns:repeat(2,minmax(0,1fr))}
+#adminPanel{background:transparent;border:0;box-shadow:none;border-radius:0;padding:0;margin:0;min-height:65vh}
+#adminPanel .section-heading{background:linear-gradient(135deg,#e8eddf,#f6ead9);border:1px solid #e6e2d1;border-radius:18px;padding:24px 28px;margin-bottom:18px}
+#adminPanel .section-heading h2{margin:0;font-size:27px}
+#adminPanel .admin-content{padding:24px;background:#fffdf9;border:1px solid #eee3d4;border-radius:18px;box-shadow:0 6px 22px #735a3508;min-height:400px}
+#adminPanel .tab-content h3:first-child{margin-top:0}
+#adminStatus{margin-top:16px}
+@media(max-width:760px){.app-shell{grid-template-columns:1fr}.app-sidebar{position:relative;top:auto;height:auto;min-height:0;padding:12px; border-right:0;border-bottom:1px solid #e7dac7}.sidebar-brand{padding:0 6px 12px}.sidebar-label{margin:12px 6px 6px}.sidebar-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.nav-item{padding:10px;font-size:13px;gap:7px}.sidebar-note{display:none}.page-main{padding:18px 14px 36px}.page-view .item-list{grid-template-columns:1fr}.topbar{padding:14px 16px}.signed-in-email{max-width:160px}}
