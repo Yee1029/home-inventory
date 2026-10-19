@@ -102,3 +102,10 @@ button:disabled{opacity:.65;cursor:wait}
 .spend-ranking{display:flex;flex-direction:column;gap:16px;margin:16px 0 24px}.rank-row{padding:12px 14px;border:1px solid #eee3d5;border-radius:12px;background:#fffdf8}.rank-label{display:flex;justify-content:space-between;gap:12px;margin-bottom:9px;font-size:14px}.rank-label strong{white-space:nowrap;color:#45694e}.dot-track{display:flex;flex-wrap:wrap;gap:5px;min-height:12px}.spend-dot{width:9px;height:9px;border-radius:50%;background:#729477;display:inline-block}
 @media(max-width:760px){.analysis-filters{grid-template-columns:1fr 1fr}.analysis-summary{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.analysis-filters,.analysis-summary{grid-template-columns:1fr}.rank-label{font-size:13px}}
+
+/* V9: comparative monthly spending chart and compact submit buttons */
+#receiveForm > button[type="submit"]{padding:9px 16px;font-size:13px;min-height:36px;line-height:1.2}
+#itemForm > button[type="submit"]{padding:9px 16px;font-size:13px;min-height:36px;line-height:1.2}
+.trend-chart{width:100%;overflow-x:auto;border:1px solid #eee3d5;border-radius:14px;background:#fffdf9;padding:12px;margin:12px 0 24px}
+.trend-svg{display:block;width:100%;min-width:560px;height:auto;max-height:360px}
+@media(max-width:640px){.trend-chart{padding:8px}.trend-svg{min-width:520px}}
