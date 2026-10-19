@@ -7,15 +7,15 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar"><div><div class="eyebrow">HOME INVENTORY</div><h1>家庭庫存管理</h1></div><button id="loginOpen" class="button secondary">管理者登入</button></header>
+  <header class="topbar"><div><div class="eyebrow">HOME INVENTORY</div><h1>家庭庫存管理</h1></div><div class="top-actions"><span id="signedInEmail" class="signed-in-email hidden"></span><button id="logout" class="button secondary hidden">登出</button><button id="loginOpen" class="button secondary">管理者登入</button></div></header>
   <main class="container">
-    <section class="intro"><p class="eyebrow">PUBLIC VIEW</p><h2>效期提醒</h2><p>此頁面只顯示已過期或即將到期的物品，不公開完整庫存、數量、存放位置或異動紀錄。</p></section>
+    <section class="intro"><p class="eyebrow">HOME</p><h2>效期提醒</h2><p>主頁只顯示已過期或即將到期的物品。登入管理者帳號後，可從側邊選單管理庫存。</p></section>
     <section class="filters"><button class="chip active" data-filter="all">全部提醒</button><button class="chip" data-filter="已過期">已過期</button><button class="chip" data-filter="即將到期">即將到期</button><button id="refresh" class="button secondary small">重新整理</button></section>
     <div id="status" class="notice">請先設定 Supabase 連線資訊，再載入效期清單。</div>
     <section id="expiryList" class="item-list" aria-live="polite"></section>
     <section id="adminPanel" class="admin-panel hidden">
-      <div class="section-heading"><div><p class="eyebrow">ADMIN</p><h2>管理者工作區</h2></div><button id="logout" class="button secondary">登出</button></div>
-      <div class="tabs"><button class="tab active" data-tab="items">物品</button><button class="tab" data-tab="receive">新增入庫</button><button class="tab" data-tab="transactions">異動紀錄</button></div>
+      <div class="section-heading"><div><p class="eyebrow">ADMIN</p><h2>管理者工作區</h2></div></div>
+      <div class="admin-layout"><nav class="sidebar" aria-label="管理功能"><button class="tab active" data-tab="items">物品管理</button><button class="tab" data-tab="receive">新增入庫</button><button class="tab" data-tab="consume">出庫／領用</button><button class="tab" data-tab="transactions">異動紀錄</button></nav><div class="admin-content">
       <section id="tab-items" class="tab-content">
         <h3>新增物品</h3>
         <form id="itemForm" class="form-grid">
@@ -45,11 +45,24 @@
           <button class="button primary" type="submit">確認入庫</button>
         </form>
       </section>
+      <section id="tab-consume" class="tab-content hidden">
+        <h3>出庫／領用</h3>
+        <p class="helper-text">請選擇實際出庫的庫存批次。若同一物品有不同效期，請依照批次及效期選擇，避免扣錯庫存。</p>
+        <form id="consumeForm" class="form-grid">
+          <label>物品<select name="item_id" id="consumeItem" required></select></label>
+          <label>庫存批次<select name="batch_id" id="consumeBatch" required></select></label>
+          <label>出庫數量<input name="quantity" type="number" min="0.001" step="0.001" required placeholder="輸入數量"></label>
+          <label>出庫類型<select name="type" required><option value="consume">一般領用</option><option value="discard">丟棄／報廢</option></select></label>
+          <label class="full-width">原因／備註<input name="reason" maxlength="500" placeholder="例如：日常使用、過期丟棄"></label>
+          <button class="button primary" type="submit">確認出庫</button>
+        </form>
+      </section>
       <section id="tab-transactions" class="tab-content hidden"><h3>最近異動紀錄</h3><div id="transactionsTable" class="table-wrap"></div></section>
+      </div></div>
       <div id="adminStatus" class="notice hidden" aria-live="polite"></div>
     </section>
   </main>
-  <dialog id="loginDialog"><form id="loginForm" class="login-form"><button type="button" id="loginClose" class="dialog-close" aria-label="關閉">×</button><p class="eyebrow">ADMIN ACCESS</p><h2>管理者登入</h2><label>電子郵件<input type="email" name="email" required autocomplete="username"></label><label>密碼<input type="password" name="password" required autocomplete="current-password"></label><button class="button primary" type="submit">登入</button><p id="loginMessage" class="form-message"></p></form></dialog>
+  <dialog id="loginDialog"><form id="loginForm" class="login-form"><button type="button" id="loginClose" class="dialog-close" aria-label="關閉">×</button><p class="eyebrow">ADMIN ACCESS</p><h2>管理者登入</h2><label>電子郵件<input type="email" name="email" required autocomplete="off" autocapitalize="none" spellcheck="false"></label><label>密碼<input type="password" name="password" required autocomplete="new-password"></label><button class="button primary" type="submit">登入</button><p id="loginMessage" class="form-message"></p></form></dialog>
   <footer>家庭庫存管理 · 公開頁面僅顯示效期提醒</footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
