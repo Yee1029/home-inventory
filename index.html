@@ -18,6 +18,7 @@
         <button class="nav-item admin-only hidden" data-page="items"><span>▣</span>物品管理</button>
         <button class="nav-item admin-only hidden" data-page="receive"><span>↘</span>新增入庫</button>
         <button class="nav-item admin-only hidden" data-page="transactions"><span>◷</span>異動紀錄</button>
+        <button class="nav-item admin-only hidden" data-page="inventory"><span>▤</span>庫存查詢</button>
       </nav>
       <div class="sidebar-note"><strong>整理生活，從家庭庫存開始</strong><p>定期檢查效期，讓日常收納更安心。</p></div>
     </aside>
@@ -73,6 +74,7 @@
         </form>
       </section>
       <section id="tab-transactions" class="tab-content hidden"><h3>最近異動紀錄</h3><div id="transactionsTable" class="table-wrap"></div></section>
+      <section id="tab-inventory" class="tab-content hidden"><h3>庫存查詢</h3><p class="helper-text">依存放位置或物品名稱篩選，查看各批次剩餘數量與效期。</p><div class="inventory-filters"><label>存放位置<select id="inventoryLocation"><option value="">全部位置</option></select></label><label>物品名稱<input id="inventorySearch" type="search" placeholder="輸入物品名稱，例如：精油"></label><button class="button secondary" id="inventoryRefresh" type="button">重新整理</button></div><div id="inventorySummary" class="notice"></div><div id="inventoryTable" class="table-wrap"></div></section>
       </div>
         <div id="adminStatus" class="notice hidden" aria-live="polite"></div>
       </section>

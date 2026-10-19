@@ -86,3 +86,9 @@ body{color:var(--ink);background:#fbf6ed}
 /* Inline create controls and batch details */
 .select-with-action{display:flex;align-items:center;gap:8px}.select-with-action select{flex:1;min-width:0}.select-with-action .button{white-space:nowrap;flex-shrink:0}.batch-info{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;padding:12px 14px;border:1px solid #dce5d4;border-radius:12px;background:#edf3e8}.batch-info div{display:flex;flex-direction:column;gap:4px;min-width:0}.batch-info span{font-size:12px;color:#668064}.batch-info strong{font-size:15px;color:#38583d;overflow-wrap:anywhere}.helper-text{display:block;color:#817866;font-size:12px;line-height:1.5;margin-top:6px}
 @media(max-width:560px){.select-with-action{align-items:stretch}.select-with-action .button{padding:9px 10px}.batch-info{gap:8px;padding:10px}}
+/* Inventory query filters */
+.inventory-filters{display:grid;grid-template-columns:minmax(180px,1fr) minmax(220px,2fr) auto;gap:12px;align-items:end;margin:16px 0}
+.inventory-filters label{display:flex;flex-direction:column;gap:7px;font-size:13px;color:#6d6254}
+.inventory-filters input,.inventory-filters select{font:inherit;padding:11px 12px;border:1px solid #e4d9c9;border-radius:10px;background:#fffefa;color:#403b32;min-width:0}
+button:disabled{opacity:.65;cursor:wait}
+@media(max-width:640px){.inventory-filters{grid-template-columns:1fr}.inventory-filters .button{justify-self:start}}
