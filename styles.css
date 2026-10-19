@@ -63,3 +63,22 @@ footer{color:#9a8b78;border-top-color:#e9dfd0}
 #adminPanel .tab-content h3:first-child{margin-top:0}
 #adminStatus{margin-top:16px}
 @media(max-width:760px){.app-shell{grid-template-columns:1fr}.app-sidebar{position:relative;top:auto;height:auto;min-height:0;padding:12px; border-right:0;border-bottom:1px solid #e7dac7}.sidebar-brand{padding:0 6px 12px}.sidebar-label{margin:12px 6px 6px}.sidebar-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}.nav-item{padding:10px;font-size:13px;gap:7px}.sidebar-note{display:none}.page-main{padding:18px 14px 36px}.page-view .item-list{grid-template-columns:1fr}.topbar{padding:14px 16px}.signed-in-email{max-width:160px}}
+
+/* Family-home dashboard polish: illustrated pantry hero and warm details */
+:root{--cream:#fbf5e9;--paper:#fffdf8;--sage:#e5ead8;--sage-dark:#52745b;--wood:#b9824f;--terracotta:#d78365;--line:#eadfce;--ink:#403b32}
+body{color:var(--ink);background:#fbf6ed}
+.topbar{background:rgba(255,253,248,.97);border-bottom-color:#ecdfce}
+.app-sidebar{background:linear-gradient(180deg,#f7eee0 0%,#f5ead9 100%);border-right-color:#e9dac5}
+.sidebar-brand{border-bottom-color:#e7d7c0}
+.brand-icon{background:#d78365;box-shadow:0 4px 10px #b56c4b22}
+.nav-item{border-radius:13px;padding:13px 14px}
+.nav-item.active{background:#e3ead7;color:#365b43;box-shadow:inset 3px 0 #719174}
+.nav-item:hover{background:#f0e3d0}
+.page-main{background:linear-gradient(180deg,#fffaf2 0%,#f8f0e4 100%)}
+.home-hero{position:relative;display:flex;align-items:center;justify-content:space-between;gap:18px;min-height:190px;overflow:hidden;padding:26px 30px;background:linear-gradient(110deg,#f2eadb 0%,#f8f0e2 55%,#f7e8d6 100%);border:1px solid #eadcc7;box-shadow:0 8px 24px #8d694019}
+.hero-copy{position:relative;z-index:1;max-width:620px}.home-hero h2{font-size:clamp(27px,3vw,36px);margin:0 0 10px;color:#374d3b;letter-spacing:.02em}.home-hero p:last-of-type{max-width:630px;line-height:1.8;color:#786b59;margin:0}.leaf-mark{display:inline-flex;align-items:center;justify-content:center;color:#789a69;font-size:25px;vertical-align:middle;margin-left:4px}.hero-caption{display:flex;align-items:center;gap:8px;color:#8d795e;font-size:12px;margin-top:17px}.hero-dot{width:8px;height:8px;background:#d78365;border-radius:50%;box-shadow:0 0 0 4px #d7836520}.hero-art{flex:0 0 min(38%,390px);align-self:stretch;display:flex;align-items:center;justify-content:center;margin:-6px -12px -8px 0;opacity:.98}.hero-art svg{width:100%;max-height:190px;filter:drop-shadow(0 6px 5px #87663b10)}
+.filters{margin:20px 0 16px}.chip{border-radius:12px}.chip.active,.button.primary{background:#52745b;border-color:#52745b}.button.secondary{border-color:#e6d4bc;color:#775a3d}.button.secondary:hover{background:#f9eddb}.notice{border-radius:14px;background:#fffdf8;border-color:#eadfce}.expiry-card{border-radius:17px;background:#fffdf9;border-color:#eee2d1;box-shadow:0 5px 18px #8b6a3b0a}.expiry-card:hover{border-color:#ddc9ad;box-shadow:0 8px 22px #8b6a3b12}.status-tag{border-radius:10px}.status-tag.expired{background:#fbe1d9;color:#b74738}.status-tag:not(.expired){background:#fff0cf;color:#9c661f}
+#adminPanel .section-heading{background:linear-gradient(120deg,#e9eedf,#f8ead9);border-color:#e9dfce}#adminPanel .admin-content{background:#fffdf9;border-color:#eee2d2;box-shadow:0 8px 25px #8b6a3b0a}.form-grid input,.form-grid select,.login-form input{border-radius:12px}.button{transition:transform .16s ease,box-shadow .16s ease}.button:hover{transform:translateY(-1px);box-shadow:0 4px 10px #8b6a3b14}
+.sidebar-note{position:relative;padding-top:20px}.sidebar-note:before{content:'♡';display:block;font-size:30px;line-height:1;color:#d78365;margin-bottom:8px}.sidebar-note strong{color:#96724c}
+@media(max-width:760px){.home-hero{min-height:0;padding:22px;}.hero-art{flex-basis:34%;margin-right:-8px}.hero-art svg{max-height:140px}}
+@media(max-width:560px){.home-hero{display:block;padding:22px}.hero-art{height:110px;max-width:100%;margin:6px 0 -10px;justify-content:flex-end}.hero-art svg{width:75%;max-height:120px}.hero-caption{line-height:1.5}.page-main .intro h2{font-size:26px}}
