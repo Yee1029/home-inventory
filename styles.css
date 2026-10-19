@@ -3,3 +3,39 @@
 /* v2: account controls, sidebar navigation and checkout */
 .top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}.signed-in-email{font-size:13px;color:#50584f;overflow-wrap:anywhere}.admin-layout{display:grid;grid-template-columns:180px minmax(0,1fr);gap:22px;margin-top:20px}.sidebar{display:flex;flex-direction:column;gap:6px;align-self:start;position:sticky;top:16px}.sidebar .tab{border:0;border-radius:10px;text-align:left;padding:12px;color:#586057}.sidebar .tab.active{background:#e9eee5;color:#344c3c;border:0}.admin-content{min-width:0}.admin-content .tab-content h3:first-child{margin-top:0}.helper-text{font-size:13px;line-height:1.7;color:#6a7068;margin:0 0 18px}.full-width{grid-column:1/-1}.topbar{gap:18px}.topbar .button{white-space:nowrap}
 @media(max-width:640px){.top-actions{gap:6px}.signed-in-email{max-width:150px;font-size:11px}.admin-layout{grid-template-columns:1fr;gap:14px}.sidebar{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.sidebar .tab{text-align:center;padding:10px 6px;font-size:13px}.full-width{grid-column:auto}}
+
+
+/* v2.2 warm family theme: cream, sage, and soft terracotta */
+:root{color:#403b32;background:#faf6ee;--cream:#faf6ee;--paper:#fffdf8;--sage:#e5eadb;--sage-dark:#52745b;--sage-deep:#365b43;--wood:#a8794b;--terracotta:#c7795a;--line:#e9dfd0;--muted:#82796d}
+body{background:linear-gradient(180deg,#fbf7ef 0%,#f7f1e6 100%);color:#403b32}
+.topbar{background:rgba(255,253,248,.96);border-bottom:1px solid #e9dfd0;box-shadow:0 2px 12px #735a3510}
+.topbar h1{color:#3e493c}
+.eyebrow{color:#9a7b58}
+.intro{background:linear-gradient(135deg,#e8eddf 0%,#f6ead9 100%);border:1px solid #e6e2d1;box-shadow:0 8px 24px #735a3508}
+.intro h2,.section-heading h2{color:#3d4c3d}
+.intro p:last-child,.helper-text{color:#746c60}
+.chip,.button{border-color:#e1d5c4;background:#fffdf8;color:#51483c;transition:background .18s ease,border-color .18s ease,transform .18s ease}
+.chip:hover,.button:hover{border-color:#c6ad8d;transform:translateY(-1px)}
+.chip.active,.button.primary{background:#52745b;color:#fffdf8;border-color:#52745b}
+.button.secondary{background:#fffdf8;color:#62523f}
+.notice{background:#fffdf8;border-color:#e9dfd0;color:#746b5e;box-shadow:0 3px 12px #735a3506}
+.notice.error{background:#fff0e9;color:#9e4938;border-color:#f1c7b8}
+.expiry-card{background:#fffdf8;border-color:#eee3d4;box-shadow:0 4px 16px #735a3508}
+.expiry-card h3{color:#4a463d}
+.status-tag{background:#fff0d5;color:#97601d}
+.status-tag.expired{background:#fbe3dc;color:#b74f40}
+.admin-panel{background:#fffdf8;border-color:#e9dfd0;box-shadow:0 8px 28px #735a3509}
+.admin-layout{grid-template-columns:190px minmax(0,1fr);gap:24px}
+.sidebar{background:#f7f0e4;border:1px solid #eee2d0;border-radius:16px;padding:10px;position:sticky;top:16px}
+.sidebar .tab{border-radius:11px;color:#716657;padding:13px 14px;transition:background .18s ease,color .18s ease}
+.sidebar .tab:hover{background:#efe7d8;color:#4b5e4a}
+.sidebar .tab.active{background:#e2ead8;color:#365b43;font-weight:700;box-shadow:inset 3px 0 #719174}
+.admin-content{background:#fffdf9;border:1px solid #f0e6d9;border-radius:15px;padding:22px;min-height:280px}
+.admin-content .tab-content h3{color:#485846}
+.form-grid label,.login-form label{color:#6d6254}
+.form-grid input,.form-grid select,.login-form input{border-color:#e4d9c9;background:#fffefa;color:#403b32}
+.form-grid input:focus,.form-grid select:focus,.login-form input:focus{outline:2px solid #c9d9bf;border-color:#7b9a7b}
+table{color:#494238}th,td{border-bottom-color:#eee5d9}th{color:#887b68}
+.dialog-close{color:#897866}dialog{background:#fffdf8}dialog::backdrop{background:#4b443b77}
+footer{color:#9a8b78;border-top-color:#e9dfd0}
+@media(max-width:640px){.admin-layout{grid-template-columns:1fr}.sidebar{position:static;background:#f7f0e4}.admin-content{padding:16px}.intro{background:linear-gradient(135deg,#e8eddf,#f6ead9)}}

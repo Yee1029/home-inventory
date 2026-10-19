@@ -15,7 +15,7 @@
     <section id="expiryList" class="item-list" aria-live="polite"></section>
     <section id="adminPanel" class="admin-panel hidden">
       <div class="section-heading"><div><p class="eyebrow">ADMIN</p><h2>管理者工作區</h2></div></div>
-      <div class="admin-layout"><nav class="sidebar" aria-label="管理功能"><button class="tab active" data-tab="items">物品管理</button><button class="tab" data-tab="receive">新增入庫</button><button class="tab" data-tab="consume">出庫／領用</button><button class="tab" data-tab="transactions">異動紀錄</button></nav><div class="admin-content">
+      <div class="admin-layout"><nav class="sidebar" aria-label="管理功能"><button class="tab active" data-tab="items">物品管理</button><button class="tab" data-tab="receive">新增入庫</button><button class="tab" data-tab="consume">領用出庫</button><button class="tab" data-tab="transactions">異動紀錄</button></nav><div class="admin-content">
       <section id="tab-items" class="tab-content">
         <h3>新增物品</h3>
         <form id="itemForm" class="form-grid">
@@ -46,7 +46,7 @@
         </form>
       </section>
       <section id="tab-consume" class="tab-content hidden">
-        <h3>出庫／領用</h3>
+        <h3>領用出庫</h3>
         <p class="helper-text">請選擇實際出庫的庫存批次。若同一物品有不同效期，請依照批次及效期選擇，避免扣錯庫存。</p>
         <form id="consumeForm" class="form-grid">
           <label>物品<select name="item_id" id="consumeItem" required></select></label>
