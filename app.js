@@ -1,6 +1,6 @@
 /* Home Inventory v1. Fill these values from the NEW Supabase project settings. Never use service_role here. */
-const SUPABASE_URL = 'PASTE_NEW_PROJECT_URL_HERE';
-const SUPABASE_ANON_KEY = 'PASTE_NEW_PUBLISHABLE_OR_ANON_KEY_HERE';
+const SUPABASE_URL = 'https://oxoincirkewbwarhzaaw.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_5Ahl3TVf5Gapj6glZqkCXg_c7YqSOcr';
 
 const $ = (s) => document.querySelector(s);
 let db = null;
