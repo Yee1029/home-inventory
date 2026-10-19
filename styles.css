@@ -92,3 +92,13 @@ body{color:var(--ink);background:#fbf6ed}
 .inventory-filters input,.inventory-filters select{font:inherit;padding:11px 12px;border:1px solid #e4d9c9;border-radius:10px;background:#fffefa;color:#403b32;min-width:0}
 button:disabled{opacity:.65;cursor:wait}
 @media(max-width:640px){.inventory-filters{grid-template-columns:1fr}.inventory-filters .button{justify-self:start}}
+/* Purchase cost and spending analysis */
+.analysis-filters{display:grid;grid-template-columns:repeat(3,minmax(150px,1fr)) auto;gap:12px;align-items:end;margin:16px 0 20px}
+.analysis-filters label{display:flex;flex-direction:column;gap:7px;font-size:13px;color:#6d6254}
+.analysis-filters input,.analysis-filters select{font:inherit;padding:11px 12px;border:1px solid #e4d9c9;border-radius:10px;background:#fffefa;color:#403b32;min-width:0}
+.analysis-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0 24px}
+.analysis-stat{padding:16px;border:1px solid #e9ddcc;border-radius:14px;background:#fffaf2;display:flex;flex-direction:column;gap:8px;min-width:0}
+.analysis-stat span{font-size:12px;color:#817866}.analysis-stat strong{font-size:20px;color:#45694e;overflow-wrap:anywhere}
+.spend-ranking{display:flex;flex-direction:column;gap:16px;margin:16px 0 24px}.rank-row{padding:12px 14px;border:1px solid #eee3d5;border-radius:12px;background:#fffdf8}.rank-label{display:flex;justify-content:space-between;gap:12px;margin-bottom:9px;font-size:14px}.rank-label strong{white-space:nowrap;color:#45694e}.dot-track{display:flex;flex-wrap:wrap;gap:5px;min-height:12px}.spend-dot{width:9px;height:9px;border-radius:50%;background:#729477;display:inline-block}
+@media(max-width:760px){.analysis-filters{grid-template-columns:1fr 1fr}.analysis-summary{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.analysis-filters,.analysis-summary{grid-template-columns:1fr}.rank-label{font-size:13px}}
