@@ -109,3 +109,7 @@ button:disabled{opacity:.65;cursor:wait}
 .trend-chart{width:100%;overflow-x:auto;border:1px solid #eee3d5;border-radius:14px;background:#fffdf9;padding:12px;margin:12px 0 24px}
 .trend-svg{display:block;width:100%;min-width:560px;height:auto;max-height:360px}
 @media(max-width:640px){.trend-chart{padding:8px}.trend-svg{min-width:520px}}
+
+
+/* V10: force receive submit button to match consume submit sizing and placement */
+#receiveForm > button[type="submit"]{display:inline-flex;align-items:center;justify-content:center;justify-self:start;align-self:start;grid-column:1 / -1;width:auto;height:auto;min-width:0;min-height:0;padding:8px 13px;font:inherit;font-size:13px;line-height:1.2;margin:0;border-radius:999px;box-sizing:border-box}
