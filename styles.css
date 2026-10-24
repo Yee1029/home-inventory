@@ -113,3 +113,16 @@ button:disabled{opacity:.65;cursor:wait}
 
 /* V10: force receive submit button to match consume submit sizing and placement */
 #receiveForm > button[type="submit"]{display:inline-flex;align-items:center;justify-content:center;justify-self:start;align-self:start;grid-column:1 / -1;width:auto;height:auto;min-width:0;min-height:0;padding:8px 13px;font:inherit;font-size:13px;line-height:1.2;margin:0;border-radius:999px;box-sizing:border-box}
+
+/* V13: inline editing controls and expanded inventory filters */
+#itemsTable table{min-width:1180px}
+#itemsTable .item-edit-row input,#itemsTable .item-edit-row select{min-width:110px;width:100%;max-width:220px;box-sizing:border-box;padding:8px;border:1px solid #d9c8b4;border-radius:8px;background:#fffefa;color:#403b32;font:inherit}
+#itemsTable .item-edit-row td{vertical-align:top;padding:8px 6px}
+#itemsTable .item-edit-row td:last-child{min-width:145px}
+.inventory-filters{grid-template-columns:repeat(2,minmax(160px,1fr)) minmax(200px,2fr) auto}
+#receiveItemInfo{margin-top:8px;padding:9px 10px;font-size:12px;display:grid;gap:4px}
+#receiveItemInfo.hidden{display:none}
+#receiveItemInfo strong{font-size:13px;color:#3f6b51}
+#receiveItemInfo small{line-height:1.5;color:#766b5c}
+@media(max-width:900px){.inventory-filters{grid-template-columns:1fr 1fr}}
+@media(max-width:640px){.inventory-filters{grid-template-columns:1fr}}

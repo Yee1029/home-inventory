@@ -52,7 +52,7 @@
       <section id="tab-receive" class="tab-content hidden">
         <h3>新增入庫批次</h3>
         <form id="receiveForm" class="form-grid">
-          <label>物品<select name="item_id" id="receiveItem" required></select></label>
+          <label>物品<select name="item_id" id="receiveItem" required></select><div id="receiveItemInfo" class="batch-info hidden" aria-live="polite"></div></label>
           <label>入庫數量<input name="quantity" type="number" min="0.001" step="0.001" required></label>
           <label>本次購買總金額（元）<input name="purchase_total" type="number" min="0" step="0.01" placeholder="選填；未填則使用預設單價估算"></label>
           <label>入庫日期<input name="received_date" type="date" required></label>
@@ -78,7 +78,7 @@
         </form>
       </section>
       <section id="tab-transactions" class="tab-content hidden"><h3>最近異動紀錄</h3><div id="transactionsTable" class="table-wrap"></div></section>
-      <section id="tab-inventory" class="tab-content hidden"><h3>庫存查詢</h3><p class="helper-text">依存放位置或物品名稱篩選，查看各批次剩餘數量與效期。</p><div class="inventory-filters"><label>存放位置<select id="inventoryLocation"><option value="">全部位置</option></select></label><label>物品名稱<input id="inventorySearch" type="search" placeholder="輸入物品名稱，例如：精油"></label><button class="button secondary" id="inventoryRefresh" type="button">重新整理</button></div><div id="inventorySummary" class="notice"></div><div id="inventoryTable" class="table-wrap"></div></section>
+      <section id="tab-inventory" class="tab-content hidden"><h3>庫存查詢</h3><p class="helper-text">依存放位置或物品名稱篩選，查看各批次剩餘數量與效期。</p><div class="inventory-filters"><label>分類<select id="inventoryCategory"><option value="">全部分類</option></select></label><label>存放位置<select id="inventoryLocation"><option value="">全部位置</option></select></label><label>物品名稱<input id="inventorySearch" type="search" placeholder="輸入物品名稱，例如：精油"></label><button class="button secondary" id="inventoryRefresh" type="button">重新整理</button></div><div id="inventorySummary" class="notice"></div><div id="inventoryTable" class="table-wrap"></div></section>
       <section id="tab-analysis" class="tab-content hidden"><h3>消費分析</h3><p class="helper-text">依購買日期區間與分類，分析總消費、各商品花費及消費排行。舊批次沒有金額資料時會標示未記錄，不會自行推算歷史花費。</p><div class="analysis-filters"><label>開始日期<input id="analysisStart" type="date"></label><label>結束日期<input id="analysisEnd" type="date"></label><label>商品分類<select id="analysisCategory"><option value="">全部分類</option></select></label><button class="button secondary" id="analysisRefresh" type="button">查詢分析</button></div><div id="analysisSummary" class="analysis-summary"></div><h4>各分類每月消費比較</h4><p class="helper-text">以折線圖比較不同分類在各月份的購買金額；線條越高代表該月份消費越多。</p><div id="spendTrendChart" class="trend-chart"></div><h4>商品消費排行</h4><div id="spendRanking" class="spend-ranking"></div><h4>購買明細</h4><div id="analysisTable" class="table-wrap"></div></section>
       </div>
         <div id="adminStatus" class="notice hidden" aria-live="polite"></div>
