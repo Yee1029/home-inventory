@@ -57,10 +57,10 @@
           <label>本次購買總金額（元）<input name="purchase_total" type="number" min="0" step="0.01" placeholder="選填；未填則使用預設單價估算"></label>
           <label>入庫日期<input name="received_date" type="date" required></label>
           <label>本批存放位置<select name="location_id" id="receiveLocation"><option value="">沿用物品預設位置</option></select></label>
-          <label>有效期限（包裝未標示可留空）<input name="expiry_date" type="date"></label>
+          <label>有效期限（無效期商品可留空，例如娃娃、包包）<input name="expiry_date" type="date"></label>
           <label>批次備註<input name="batch_label" maxlength="120" placeholder="例如：2026 年 10 月購買"></label>
           <label>開封日期（選填）<input name="opened_date" type="date"></label>
-          <label>開封後使用期限（選填）<input name="opened_use_by_date" type="date"></label>
+          <label>開封後使用期限（無此期限可留空）<input name="opened_use_by_date" type="date"></label>
           <label>備註<input name="notes" maxlength="500"></label>
           <button class="button primary" type="submit">確認入庫</button>
         </form>

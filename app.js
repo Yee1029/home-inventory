@@ -53,12 +53,13 @@ async function loadAdminData(){await Promise.all([loadCategories(),loadLocations
 async function loadCategories(){const {data,error}=await db.from('categories').select('id,name').eq('is_active',true).order('name');if(error)return setAdminNotice(error.message,true);$('#categorySelect').innerHTML='<option value="">未分類</option>'+(data||[]).map(x=>`<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('');}
 async function loadLocations(){const {data,error}=await db.from('storage_locations').select('id,name').eq('is_active',true).order('name');if(error)return setAdminNotice(error.message,true);const options=(data||[]).map(x=>`<option value="${x.id}">${escapeHtml(x.name)}</option>`).join('');$('#locationSelect').innerHTML='<option value="">未指定</option>'+options;const receiveLocation=$('#receiveLocation');if(receiveLocation)receiveLocation.innerHTML='<option value="">沿用物品預設位置</option>'+options;}
 async function loadItems(){
- const {data,error}=await db.from('items').select('id,name,brand,unit,unit_cost,is_active,location_id,expiry_reminder_days,categories(name),storage_locations(name),inventory_batches(id,batch_label,received_date,expiry_date,remaining_quantity,purchase_total,location_id,storage_locations(name))').order('name');
+ const {data,error}=await db.from('items').select('id,name,brand,unit,unit_cost,is_active,location_id,category_id,low_stock_threshold,notes,expiry_reminder_days,categories(name),storage_locations(name),inventory_batches(id,batch_label,received_date,expiry_date,remaining_quantity,purchase_total,location_id,storage_locations(name))').order('name');
  if(error)return setAdminNotice(error.message,true);currentItems=data||[];
- $('#itemsTable').innerHTML=currentItems.length?`<table><thead><tr><th>物品</th><th>分類</th><th>單位</th><th>預設單價</th><th>目前庫存</th><th>狀態</th><th>操作</th></tr></thead><tbody>${currentItems.map(i=>{const qty=(i.inventory_batches||[]).reduce((sum,b)=>sum+Number(b.remaining_quantity||0),0);return `<tr><td>${escapeHtml(i.name)}</td><td>${escapeHtml(i.categories?.name||'未分類')}</td><td>${escapeHtml(i.unit)}</td><td>${i.unit_cost==null?'—':money(i.unit_cost)}</td><td>${qty}</td><td>${i.is_active?'使用中':'已停用'}</td><td>${i.is_active?`<button class="button secondary small" data-consume="${i.id}">領用</button> <button class="button secondary small" data-deactivate="${i.id}">停用</button>`:'—'}</td></tr>`}).join('')}</tbody></table>`:'<p>尚無物品，請先新增物品。</p>';
+ $('#itemsTable').innerHTML=currentItems.length?`<table><thead><tr><th>物品</th><th>分類</th><th>單位</th><th>預設單價</th><th>目前庫存</th><th>狀態</th><th>操作</th></tr></thead><tbody>${currentItems.map(i=>{const qty=(i.inventory_batches||[]).reduce((sum,b)=>sum+Number(b.remaining_quantity||0),0);return `<tr><td>${escapeHtml(i.name)}</td><td>${escapeHtml(i.categories?.name||'未分類')}</td><td>${escapeHtml(i.unit)}</td><td>${i.unit_cost==null?'—':money(i.unit_cost)}</td><td>${qty}</td><td>${i.is_active?'使用中':'已停用'}</td><td><button class="button secondary small" data-edit-item="${i.id}">編輯</button> ${i.is_active?`<button class="button secondary small" data-consume="${i.id}">領用</button> <button class="button secondary small" data-deactivate="${i.id}">停用</button>`:'—'}</td></tr>`}).join('')}</tbody></table>`:'<p>尚無物品，請先新增物品。</p>';
  $('#receiveItem').innerHTML='<option value="">請選擇物品</option>'+currentItems.filter(i=>i.is_active).map(i=>`<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('');
  $('#consumeItem').innerHTML='<option value="">請選擇物品</option>'+currentItems.filter(i=>i.is_active&&(i.inventory_batches||[]).some(b=>Number(b.remaining_quantity)>0)).map(i=>`<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('');
  updateConsumeBatches();
+ $('#itemsTable').querySelectorAll('[data-edit-item]').forEach(b=>b.addEventListener('click',()=>editItem(b.dataset.editItem)));
  $('#itemsTable').querySelectorAll('[data-consume]').forEach(b=>b.addEventListener('click',()=>{showPage('consume');$('#consumeItem').value=b.dataset.consume;updateConsumeBatches();}));
  $('#itemsTable').querySelectorAll('[data-deactivate]').forEach(b=>b.addEventListener('click',()=>deactivateItem(b.dataset.deactivate)));
 }
@@ -81,6 +82,37 @@ function renderInventory(rows){
  $('#inventoryTable').innerHTML=batches.length?`<table><thead><tr><th>物品</th><th>購買通路</th><th>存放位置</th><th>入庫日期</th><th>有效期限</th><th>開封後期限</th><th>剩餘數量</th><th>單價</th><th>本批購買金額</th><th>批次備註</th></tr></thead><tbody>${batches.map(b=>`<tr><td>${escapeHtml(b.itemName)}</td><td>${escapeHtml(b.brand||'—')}</td><td>${escapeHtml(b.location)}</td><td>${formatDate(b.received_date)}</td><td>${formatDate(b.expiry_date)}</td><td>${formatDate(b.opened_use_by_date)}</td><td>${Number(b.remaining_quantity)} ${escapeHtml(b.unit)}</td><td>${b.unitCost==null?'未記錄':money(b.unitCost)}</td><td>${b.purchaseTotal==null?'未記錄':money(b.purchaseTotal)}</td><td>${escapeHtml(b.batch_label||'—')}</td></tr>`).join('')}</tbody></table>`:'<p>目前沒有符合條件且庫存大於 0 的批次。</p>';
 }
 async function loadTransactions(){const {data,error}=await db.from('stock_transactions').select('created_at,transaction_type,quantity,quantity_delta,reason,items(name)').order('created_at',{ascending:false}).limit(100);if(error)return setAdminNotice(error.message,true);$('#transactionsTable').innerHTML=data?.length?`<table><thead><tr><th>時間</th><th>物品</th><th>類型</th><th>異動量</th><th>原因</th></tr></thead><tbody>${data.map(t=>`<tr><td>${new Date(t.created_at).toLocaleString('zh-TW')}</td><td>${escapeHtml(t.items?.name||'—')}</td><td>${escapeHtml(t.transaction_type)}</td><td>${Number(t.quantity_delta)>0?'+':''}${t.quantity_delta}</td><td>${escapeHtml(t.reason||'')}</td></tr>`).join('')}</tbody></table>`:'<p>尚無異動紀錄。</p>';}
+async function editItem(id){
+ const item=currentItems.find(x=>x.id===id); if(!item)return;
+ const {data:categories,error:catErr}=await db.from('categories').select('id,name').eq('is_active',true).order('name');
+ if(catErr){alert(`無法載入分類：${catErr.message}`);return;}
+ const {data:locations,error:locErr}=await db.from('storage_locations').select('id,name').eq('is_active',true).order('name');
+ if(locErr){alert(`無法載入存放位置：${locErr.message}`);return;}
+ const name=prompt('物品名稱：',item.name); if(name===null)return;
+ const brand=prompt('購買通路（可留空）：',item.brand||''); if(brand===null)return;
+ const catOptions=(categories||[]).map((x,i)=>`${i+1}. ${x.name}${x.id===item.category_id?'（目前）':''}`).join('\n');
+ const currentCat=(categories||[]).findIndex(x=>x.id===item.category_id);
+ const catInput=prompt(`分類：輸入編號；輸入 0 表示未分類。\n${catOptions}`,currentCat>=0?String(currentCat+1):'0'); if(catInput===null)return;
+ const catN=Number(catInput); if(!Number.isInteger(catN)||catN<0||catN>(categories||[]).length){alert('分類編號無效，未儲存。');return;}
+ const locOptions=(locations||[]).map((x,i)=>`${i+1}. ${x.name}${x.id===item.location_id?'（目前）':''}`).join('\n');
+ const currentLoc=(locations||[]).findIndex(x=>x.id===item.location_id);
+ const locInput=prompt(`預設存放位置：輸入編號；輸入 0 表示未指定。\n${locOptions}`,currentLoc>=0?String(currentLoc+1):'0'); if(locInput===null)return;
+ const locN=Number(locInput); if(!Number.isInteger(locN)||locN<0||locN>(locations||[]).length){alert('存放位置編號無效，未儲存。');return;}
+ const unitCost=prompt('購買單價（元／單位，可留空）：',item.unit_cost==null?'':String(item.unit_cost)); if(unitCost===null)return;
+ const unit=prompt('計量單位：',item.unit||'個'); if(unit===null)return;
+ const threshold=prompt('低庫存門檻（可留空）：',item.low_stock_threshold==null?'':String(item.low_stock_threshold)); if(threshold===null)return;
+ const reminder=prompt('效期提醒天數：',String(item.expiry_reminder_days??30)); if(reminder===null)return;
+ const notes=prompt('備註（可留空）：',item.notes||''); if(notes===null)return;
+ if(!name.trim()||!unit.trim()){alert('物品名稱與計量單位不可空白。');return;}
+ if(unitCost.trim()!==''&&(!Number.isFinite(Number(unitCost))||Number(unitCost)<0)){alert('購買單價必須是大於或等於 0 的數字。');return;}
+ if(threshold.trim()!==''&&(!Number.isFinite(Number(threshold))||Number(threshold)<0)){alert('低庫存門檻必須是大於或等於 0 的數字。');return;}
+ if(!Number.isFinite(Number(reminder))||Number(reminder)<0){alert('效期提醒天數必須是大於或等於 0 的數字。');return;}
+ const payload={name:name.trim(),brand:brand.trim()||null,category_id:catN===0?null:categories[catN-1].id,location_id:locN===0?null:locations[locN-1].id,unit_cost:unitCost.trim()===''?null:Number(unitCost),unit:unit.trim(),low_stock_threshold:threshold.trim()===''?null:Number(threshold),expiry_reminder_days:Number(reminder),notes:notes.trim()||null};
+ const {error}=await db.from('items').update(payload).eq('id',id);
+ if(error){alert(`修改失敗：${error.message}`);setAdminNotice(`修改物品失敗：${error.message}`,true);return;}
+ alert('修改成功！物品資料已更新。\n提醒：已入庫批次的存放位置是獨立設定，不會因修改物品預設位置而變更。');
+ await loadItems(); await loadInventory(); await loadPublicExpiry();
+}
 async function deactivateItem(id){if(!confirm('確定停用這個物品？歷史紀錄會保留。'))return;const {error}=await db.from('items').update({is_active:false}).eq('id',id);if(error)return setAdminNotice(error.message,true);setAdminNotice('物品已停用。');await loadItems();await loadPublicExpiry();}
 
 $('#loginOpen').addEventListener('click',()=>{ $('#loginForm').reset(); $('#loginMessage').textContent=''; $('#loginDialog').showModal(); });$('#loginClose').addEventListener('click',()=>{ $('#loginForm').reset(); $('#loginDialog').close(); });$('#loginDialog').addEventListener('close',()=>$('#loginForm').reset());$('#refresh').addEventListener('click',refreshPublic);
