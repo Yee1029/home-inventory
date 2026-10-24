@@ -62,17 +62,29 @@ async function loadItems(){
  $('#receiveItem').innerHTML='<option value="">請選擇物品</option>'+currentItems.filter(i=>i.is_active).map(i=>`<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('');
  $('#consumeItem').innerHTML='<option value="">請選擇物品</option>'+currentItems.filter(i=>i.is_active&&(i.inventory_batches||[]).some(b=>Number(b.remaining_quantity)>0)).map(i=>`<option value="${i.id}">${escapeHtml(i.name)}</option>`).join('');
  updateReceiveItemInfo(); updateConsumeBatches();
- $('#itemsTable').querySelectorAll('[data-edit-item]').forEach(b=>b.addEventListener('click',()=>beginInlineEdit(b.dataset.editItem)));
- $('#itemsTable').querySelectorAll('[data-save-item]').forEach(b=>b.addEventListener('click',()=>saveInlineEdit(b.dataset.saveItem)));
- $('#itemsTable').querySelectorAll('[data-cancel-item]').forEach(b=>b.addEventListener('click',()=>{editingItemId=null;renderItemsTable();}));
- $('#itemsTable').querySelectorAll('[data-consume]').forEach(b=>b.addEventListener('click',()=>{showPage('consume');$('#consumeItem').value=b.dataset.consume;updateConsumeBatches();}));
- $('#itemsTable').querySelectorAll('[data-deactivate]').forEach(b=>b.addEventListener('click',()=>deactivateItem(b.dataset.deactivate)));
 }
 function renderItemsTable(){
  $('#itemsTable').innerHTML=currentItems.length?`<table><thead><tr><th>物品</th><th>購買通路</th><th>分類</th><th>預設位置</th><th>單位</th><th>預設單價</th><th>低庫存門檻</th><th>效期提醒天數</th><th>備註</th><th>目前庫存</th><th>狀態</th><th>操作</th></tr></thead><tbody>${currentItems.map(i=>{const qty=(i.inventory_batches||[]).reduce((sum,b)=>sum+Number(b.remaining_quantity||0),0);if(editingItemId===i.id){return `<tr class="item-edit-row" data-item-row="${i.id}"><td><input data-field="name" value="${escapeHtml(i.name)}" required aria-label="物品名稱"></td><td><input data-field="brand" value="${escapeHtml(i.brand||'')}" aria-label="購買通路"></td><td><select data-field="category_id"><option value="">未分類</option>${availableCategories.map(c=>`<option value="${c.id}" ${c.id===i.category_id?'selected':''}>${escapeHtml(c.name)}</option>`).join('')}</select></td><td><select data-field="location_id"><option value="">未指定</option>${availableLocations.map(l=>`<option value="${l.id}" ${l.id===i.location_id?'selected':''}>${escapeHtml(l.name)}</option>`).join('')}</select></td><td><input data-field="unit" value="${escapeHtml(i.unit||'')}" required aria-label="計量單位"></td><td><input data-field="unit_cost" type="number" min="0" step="0.01" value="${i.unit_cost??''}" aria-label="預設單價"></td><td><input data-field="low_stock_threshold" type="number" min="0" step="0.001" value="${i.low_stock_threshold??''}" aria-label="低庫存門檻"></td><td><input data-field="expiry_reminder_days" type="number" min="0" step="1" value="${i.expiry_reminder_days??30}" aria-label="效期提醒天數"></td><td><input data-field="notes" value="${escapeHtml(i.notes||'')}" aria-label="備註"></td><td>${qty}</td><td>${i.is_active?'使用中':'已停用'}</td><td><button class="button primary small" data-save-item="${i.id}">儲存</button> <button class="button secondary small" data-cancel-item="${i.id}">取消</button></td></tr>`;}return `<tr><td>${escapeHtml(i.name)}</td><td>${escapeHtml(i.brand||'—')}</td><td>${escapeHtml(i.categories?.name||'未分類')}</td><td>${escapeHtml(i.storage_locations?.name||'未指定')}</td><td>${escapeHtml(i.unit)}</td><td>${i.unit_cost==null?'—':money(i.unit_cost)}</td><td>${i.low_stock_threshold??'—'}</td><td>${i.expiry_reminder_days??30}</td><td>${escapeHtml(i.notes||'—')}</td><td>${qty}</td><td>${i.is_active?'使用中':'已停用'}</td><td><button class="button secondary small" data-edit-item="${i.id}">編輯</button> ${i.is_active?`<button class="button secondary small" data-consume="${i.id}">領用</button> <button class="button secondary small" data-deactivate="${i.id}">停用</button>`:'—'}</td></tr>`}).join('')}</tbody></table>`:'<p>尚無物品，請先新增物品。</p>';
 }
 function beginInlineEdit(id){editingItemId=id;renderItemsTable();$('#itemsTable').querySelector(`[data-item-row="${id}"] [data-field="name"]`)?.focus();}
-async function saveInlineEdit(id){const row=$(`#itemsTable [data-item-row="${id}"]`);if(!row)return;const get=k=>row.querySelector(`[data-field="${k}"]`)?.value??'';const name=get('name').trim(),unit=get('unit').trim(),cost=get('unit_cost').trim(),threshold=get('low_stock_threshold').trim(),reminder=get('expiry_reminder_days').trim();if(!name||!unit){alert('儲存失敗：物品名稱與計量單位不可空白。');return;}if(cost!==''&&(!Number.isFinite(Number(cost))||Number(cost)<0)){alert('購買單價必須是大於或等於 0 的數字。');return;}if(threshold!==''&&(!Number.isFinite(Number(threshold))||Number(threshold)<0)){alert('低庫存門檻必須是大於或等於 0 的數字。');return;}if(reminder===''||!Number.isFinite(Number(reminder))||Number(reminder)<0){alert('效期提醒天數必須是大於或等於 0 的數字。');return;}const payload={name,brand:get('brand').trim()||null,category_id:get('category_id')||null,location_id:get('location_id')||null,unit,unit_cost:cost===''?null:Number(cost),low_stock_threshold:threshold===''?null:Number(threshold),expiry_reminder_days:Number(reminder),notes:get('notes').trim()||null};const buttons=row.querySelectorAll('button');buttons.forEach(b=>b.disabled=true);try{const {error}=await db.from('items').update(payload).eq('id',id);if(error)throw error;editingItemId=null;alert('儲存成功！物品資料已更新。\n注意：既有入庫批次的存放位置仍維持各批次設定，不會跟著預設位置變更。');await loadItems();await loadInventory();await loadPublicExpiry();}catch(err){alert(`儲存失敗：${err.message||'未知錯誤'}`);buttons.forEach(b=>b.disabled=false);}}
+async function saveInlineEdit(id){
+ const row=$(`#itemsTable [data-item-row="${id}"]`);if(!row)return;
+ const get=k=>row.querySelector(`[data-field="${k}"]`)?.value??'';
+ const name=get('name').trim(),unit=get('unit').trim(),cost=get('unit_cost').trim(),threshold=get('low_stock_threshold').trim(),reminder=get('expiry_reminder_days').trim();
+ if(!name||!unit){alert('儲存失敗：物品名稱與計量單位不可空白。');return;}
+ if(cost!==''&&(!Number.isFinite(Number(cost))||Number(cost)<0)){alert('購買單價必須是大於或等於 0 的數字。');return;}
+ if(threshold!==''&&(!Number.isFinite(Number(threshold))||Number(threshold)<0)){alert('低庫存門檻必須是大於或等於 0 的數字。');return;}
+ if(reminder===''||!Number.isFinite(Number(reminder))||Number(reminder)<0){alert('效期提醒天數必須是大於或等於 0 的數字。');return;}
+ const payload={name,brand:get('brand').trim()||null,category_id:get('category_id')||null,location_id:get('location_id')||null,unit,unit_cost:cost===''?null:Number(cost),low_stock_threshold:threshold===''?null:Number(threshold),expiry_reminder_days:Number(reminder),notes:get('notes').trim()||null};
+ const buttons=row.querySelectorAll('button');buttons.forEach(b=>b.disabled=true);
+ try{
+  const {error}=await db.from('items').update(payload).eq('id',id);if(error)throw error;
+  const item=currentItems.find(x=>x.id===id);if(item)Object.assign(item,payload);
+  editingItemId=null;renderItemsTable();
+  alert('儲存成功！物品資料已更新。\n注意：既有入庫批次的存放位置仍維持各批次設定，不會跟著預設位置變更。');
+  await loadItems();await loadInventory();await loadPublicExpiry();
+ }catch(err){alert(`儲存失敗：${err.message||'未知錯誤'}`);buttons.forEach(b=>b.disabled=false);}
+}
 function updateReceiveItemInfo(){const box=$('#receiveItemInfo');if(!box)return;const item=currentItems.find(i=>i.id===$('#receiveItem').value);if(!item){box.classList.add('hidden');box.innerHTML='';return;}box.classList.remove('hidden');box.innerHTML=`<span>物品分類／所屬</span><strong>${escapeHtml(item.categories?.name||'未分類')}</strong><span>物品預設存放位置</span><strong>${escapeHtml(item.storage_locations?.name||'未指定')}</strong><small>入庫時可另選本批存放位置；未選擇則沿用物品預設位置。</small>`;const loc=$('#receiveLocation');if(loc&&!loc.value)loc.value='';}
 let inventoryRows=[];
 async function loadInventory(){
@@ -95,6 +107,15 @@ function renderInventory(rows){
 async function loadTransactions(){const {data,error}=await db.from('stock_transactions').select('created_at,transaction_type,quantity,quantity_delta,reason,items(name)').order('created_at',{ascending:false}).limit(100);if(error)return setAdminNotice(error.message,true);$('#transactionsTable').innerHTML=data?.length?`<table><thead><tr><th>時間</th><th>物品</th><th>類型</th><th>異動量</th><th>原因</th></tr></thead><tbody>${data.map(t=>`<tr><td>${new Date(t.created_at).toLocaleString('zh-TW')}</td><td>${escapeHtml(t.items?.name||'—')}</td><td>${escapeHtml(t.transaction_type)}</td><td>${Number(t.quantity_delta)>0?'+':''}${t.quantity_delta}</td><td>${escapeHtml(t.reason||'')}</td></tr>`).join('')}</tbody></table>`:'<p>尚無異動紀錄。</p>';}
 async function editItem(id){beginInlineEdit(id);}
 async function deactivateItem(id){if(!confirm('確定停用這個物品？歷史紀錄會保留。'))return;const {error}=await db.from('items').update({is_active:false}).eq('id',id);if(error)return setAdminNotice(error.message,true);setAdminNotice('物品已停用。');await loadItems();await loadPublicExpiry();}
+// Delegate item-table actions from a stable parent. Re-rendering the table no longer drops click handlers.
+$('#itemsTable').addEventListener('click',event=>{
+ const button=event.target.closest('button');if(!button)return;
+ if(button.dataset.editItem){beginInlineEdit(button.dataset.editItem);return;}
+ if(button.dataset.saveItem){saveInlineEdit(button.dataset.saveItem);return;}
+ if(button.dataset.cancelItem){editingItemId=null;renderItemsTable();return;}
+ if(button.dataset.consume){showPage('consume');$('#consumeItem').value=button.dataset.consume;updateConsumeBatches();return;}
+ if(button.dataset.deactivate){deactivateItem(button.dataset.deactivate);return;}
+});
 
 $('#loginOpen').addEventListener('click',()=>{ $('#loginForm').reset(); $('#loginMessage').textContent=''; $('#loginDialog').showModal(); });$('#loginClose').addEventListener('click',()=>{ $('#loginForm').reset(); $('#loginDialog').close(); });$('#loginDialog').addEventListener('close',()=>$('#loginForm').reset());$('#refresh').addEventListener('click',refreshPublic);
 document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{currentFilter=b.dataset.filter;document.querySelectorAll('[data-filter]').forEach(x=>x.classList.toggle('active',x===b));renderExpiry(JSON.parse($('#expiryList').dataset.rows||'[]'));}));
