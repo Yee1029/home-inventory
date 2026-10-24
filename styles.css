@@ -126,3 +126,5 @@ button:disabled{opacity:.65;cursor:wait}
 #receiveItemInfo small{line-height:1.5;color:#766b5c}
 @media(max-width:900px){.inventory-filters{grid-template-columns:1fr 1fr}}
 @media(max-width:640px){.inventory-filters{grid-template-columns:1fr}}
+
+.remember-account{display:flex!important;flex-direction:row!important;align-items:center;gap:8px!important;font-size:13px;color:#6d6254}.remember-account input{width:16px;height:16px;margin:0}

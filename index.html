@@ -85,7 +85,7 @@
       </section>
     </main>
   </div>
-  <dialog id="loginDialog"><form id="loginForm" class="login-form"><button type="button" id="loginClose" class="dialog-close" aria-label="關閉">×</button><p class="eyebrow">ADMIN ACCESS</p><h2>管理者登入</h2><label>電子郵件<input type="email" name="email" required autocomplete="off" autocapitalize="none" spellcheck="false"></label><label>密碼<input type="password" name="password" required autocomplete="new-password"></label><button class="button primary" type="submit">登入</button><p id="loginMessage" class="form-message"></p></form></dialog>
+  <dialog id="loginDialog"><form id="loginForm" class="login-form"><button type="button" id="loginClose" class="dialog-close" aria-label="關閉">×</button><p class="eyebrow">ADMIN ACCESS</p><h2>管理者登入</h2><label>電子郵件<input type="email" name="email" required autocomplete="off" autocapitalize="none" spellcheck="false"></label><label>密碼<input type="password" name="password" required autocomplete="current-password"></label><label class="remember-account"><input type="checkbox" name="rememberAccount" id="rememberAccount"> 記住帳號（只記住電子郵件，不會儲存密碼）</label><button class="button primary" type="submit">登入</button><p id="loginMessage" class="form-message"></p></form></dialog>
   <footer>家庭庫存管理 · 公開頁面僅顯示效期提醒</footer>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
