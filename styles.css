@@ -128,3 +128,6 @@ button:disabled{opacity:.65;cursor:wait}
 @media(max-width:640px){.inventory-filters{grid-template-columns:1fr}}
 
 .remember-account{display:flex!important;flex-direction:row!important;align-items:center;gap:8px!important;font-size:13px;color:#6d6254}.remember-account input{width:16px;height:16px;margin:0}
+
+/* Excel inventory import/export */
+.inventory-file-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 8px}.file-button{display:inline-flex;align-items:center;justify-content:center;cursor:pointer}.import-preview{margin:14px 0;padding:16px;border:1px solid #e5d8c5;border-radius:14px;background:#fffaf2}.import-preview h4{margin:0 0 8px;color:#485846}.import-preview .preview-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.import-preview .preview-table{max-height:300px;overflow:auto;margin-top:10px}.import-preview .preview-table table{font-size:12px}.import-preview .preview-note{font-size:12px;color:#817866;line-height:1.7}.import-preview .preview-counts{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}.import-preview .preview-counts span{background:#f1eadf;border-radius:9px;padding:6px 9px;font-size:12px}
